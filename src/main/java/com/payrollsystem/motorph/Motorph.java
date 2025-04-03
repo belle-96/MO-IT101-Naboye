@@ -20,7 +20,7 @@ public class Motorph {
         System.out.println("2: List of Employee Records");
         System.out.println("3: Calculate Net Salary");
         System.out.println("4: Calculate Salary based on Hours Worked");
-        System.out.println("5: View Employee Salary by ID"); // New Feature
+        System.out.println("5: View Employee Salary by ID");
         System.out.println("6: Exit");
         System.out.println("************************************************");
 
@@ -45,7 +45,7 @@ public class Motorph {
                 salaryOnHoursWorked();
                 break;
             case "5":
-                viewEmployeeSalaryById(); // New Functionality
+                viewEmployeeSalaryById();
                 break;
             case "6":
                 System.out.println("Exiting program. Goodbye!");
@@ -55,41 +55,6 @@ public class Motorph {
                 System.out.println("Invalid option. Please try again.");
                 displayMainMenu();
         }
-    }
-
-    private static void viewEmployeeSalaryById() {
-        Scanner input = new Scanner(System.in);
-        System.out.print("Enter Employee ID: ");
-        String empId = input.nextLine();
-
-        Employee[] employeeList = employeeModel.getEmployeeModelList();
-        boolean found = false;
-
-        for (Employee employee : employeeList) {
-            if (employee.getEmpNo().equals(empId)) {
-                System.out.println("\n***********************************************");
-                System.out.println("        Employee Salary Details      ");
-                System.out.println("***********************************************");
-                System.out.println("Employee ID: " + employee.getEmpNo());
-                System.out.println("Name: " + employee.getFirstName() + " " + employee.getLastName());
-                System.out.println("Position: " + employee.getPosition());
-                System.out.println("Basic Salary: " + employee.getBasicSalary());
-                System.out.println("Rice Subsidy: " + employee.getRiceSubsidy());
-                System.out.println("Phone Allowance: " + employee.getPhoneAllowance());
-                System.out.println("Clothing Allowance: " + employee.getClothingAllowance());
-                System.out.println("Semi-Monthly Rate: " + employee.getSemiMonthlyRate());
-                System.out.println("Hourly Rate: " + employee.getHourlyRate());
-                System.out.println("***********************************************");
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            System.out.println("Employee ID not found. Please try again.");
-        }
-
-        displayMainMenu(); // Return to the main menu after showing results
     }
 
     private static void choosePlatform() {
@@ -164,16 +129,57 @@ public class Motorph {
 
     private static void salaryOnHoursWorked() {
         Employee[] employeeList = employeeModel.getEmployeeModelList();
-        SalaryOnHoursWorked hoursWorked = new SalaryOnHoursWorked();
+        SalaryCalculator salaryCalculator = new SalaryOnHoursWorked(); // Using polymorphism
         System.out.println("***********************************************");
         System.out.println("        You have chosen option #4");
         System.out.println("     Salaries based on hours worked");
         System.out.println("***********************************************");
 
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter hours worked (e.g., 160): ");
+        double hoursWorked = input.nextDouble();  // Input for hours worked
+
         for (Employee employee : employeeList) {
+            double salaryBasedOnHoursWorked = salaryCalculator.calculateSalary(employee);
             System.out.println("Last Name: " + employee.getLastName()
                     + ", First Name: " + employee.getFirstName()
-                    + ", Salary Based on Hours Worked: " + hoursWorked.getSalaryOnHoursWorked(employee.getHourlyRate()));
+                    + ", Salary Based on Hours Worked: " + salaryBasedOnHoursWorked);
         }
+    }
+
+    private static void viewEmployeeSalaryById() {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter Employee ID: ");
+        String empId = input.nextLine();
+
+        Employee[] employeeList = employeeModel.getEmployeeModelList();
+        boolean found = false;
+
+        for (Employee employee : employeeList) {
+            if (employee.getEmpNo().equals(empId)) {
+                double grossPay = employee.getBasicSalary() + employee.getRiceSubsidy() + employee.getPhoneAllowance() + employee.getClothingAllowance();
+                double deductions = new SalaryDeductions().getTotalDeductions(employee.getBasicSalary());
+                double netSalary = grossPay - deductions;
+
+                System.out.println("\n***********************************************");
+                System.out.println("        Employee Salary Details      ");
+                System.out.println("***********************************************");
+                System.out.println("Employee ID: " + employee.getEmpNo());
+                System.out.println("Name: " + employee.getFirstName() + " " + employee.getLastName());
+                System.out.println("Position: " + employee.getPosition());
+                System.out.println("Gross Pay: " + grossPay);
+                System.out.println("Deductions: " + deductions);
+                System.out.println("Net Salary: " + netSalary);
+                System.out.println("***********************************************");
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Employee ID not found. Please try again.");
+        }
+
+        displayMainMenu(); // Return to the main menu after showing results
     }
 }

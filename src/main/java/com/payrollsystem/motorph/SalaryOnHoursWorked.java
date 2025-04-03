@@ -1,17 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.payrollsystem.motorph;
 
-/**
- *
- * @author Naboye
- */
-public class SalaryOnHoursWorked {
-
-    public double getSalaryOnHoursWorked(double hourlyRate) {
-        return hourlyRate * 160;
+public class SalaryOnHoursWorked implements SalaryCalculator {
+    @Override
+    public double calculateSalary(Employee employee) {
+        double hourlyRate = employee.getHourlyRate();
+        int hoursWorked = 160; // Example: Fixed hours
+        return hourlyRate * hoursWorked;
     }
-
 }
