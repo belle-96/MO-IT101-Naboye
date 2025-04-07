@@ -113,23 +113,30 @@ public class Motorph {
 
     private static void calculateNetSalary() {
         Employee[] employeeList = employeeModel.getEmployeeModelList();
-        SalaryDeductions salaryDeductions = new SalaryDeductions();
+        SalaryCalculator salaryCalculator = new SalaryFixedCalculator();
+
         System.out.println("***********************************************");
         System.out.println("        You have chosen option #3");
         System.out.println("          Employee Net Salaries");
         System.out.println("***********************************************");
 
         for (Employee employee : employeeList) {
-            double netSalary = employee.getBasicSalary() - salaryDeductions.getTotalDeductions(employee.getBasicSalary());
+            double gross = salaryCalculator.calculateGrossSalary(employee);
+            double deductions = salaryCalculator.calculateDeductions(employee);
+            double netSalary = salaryCalculator.calculateSalary(employee);
+
             System.out.println("Last Name: " + employee.getLastName()
                     + ", First Name: " + employee.getFirstName()
+                    + ", Gross Salary: " + gross
+                    + ", Deductions: " + deductions
                     + ", Net Salary: " + netSalary);
         }
     }
 
     private static void salaryOnHoursWorked() {
         Employee[] employeeList = employeeModel.getEmployeeModelList();
-        SalaryCalculator salaryCalculator = new SalaryOnHoursWorked(); // Using polymorphism
+        SalaryCalculator salaryCalculator = new SalaryOnHoursWorked();
+
         System.out.println("***********************************************");
         System.out.println("        You have chosen option #4");
         System.out.println("     Salaries based on hours worked");
@@ -137,13 +144,13 @@ public class Motorph {
 
         Scanner input = new Scanner(System.in);
         System.out.print("Enter hours worked (e.g., 160): ");
-        double hoursWorked = input.nextDouble();  // Input for hours worked
+        double hoursWorked = input.nextDouble();
 
         for (Employee employee : employeeList) {
-            double salaryBasedOnHoursWorked = salaryCalculator.calculateSalary(employee);
+            double salary = salaryCalculator.calculateSalary(employee, hoursWorked);
             System.out.println("Last Name: " + employee.getLastName()
                     + ", First Name: " + employee.getFirstName()
-                    + ", Salary Based on Hours Worked: " + salaryBasedOnHoursWorked);
+                    + ", Salary Based on Hours Worked: " + salary);
         }
     }
 
@@ -153,13 +160,14 @@ public class Motorph {
         String empId = input.nextLine();
 
         Employee[] employeeList = employeeModel.getEmployeeModelList();
+        SalaryCalculator salaryCalculator = new SalaryFixedCalculator();
         boolean found = false;
 
         for (Employee employee : employeeList) {
             if (employee.getEmpNo().equals(empId)) {
-                double grossPay = employee.getBasicSalary() + employee.getRiceSubsidy() + employee.getPhoneAllowance() + employee.getClothingAllowance();
-                double deductions = new SalaryDeductions().getTotalDeductions(employee.getBasicSalary());
-                double netSalary = grossPay - deductions;
+                double gross = salaryCalculator.calculateGrossSalary(employee);
+                double deductions = salaryCalculator.calculateDeductions(employee);
+                double netSalary = salaryCalculator.calculateSalary(employee);
 
                 System.out.println("\n***********************************************");
                 System.out.println("        Employee Salary Details      ");
@@ -167,7 +175,7 @@ public class Motorph {
                 System.out.println("Employee ID: " + employee.getEmpNo());
                 System.out.println("Name: " + employee.getFirstName() + " " + employee.getLastName());
                 System.out.println("Position: " + employee.getPosition());
-                System.out.println("Gross Pay: " + grossPay);
+                System.out.println("Gross Pay: " + gross);
                 System.out.println("Deductions: " + deductions);
                 System.out.println("Net Salary: " + netSalary);
                 System.out.println("***********************************************");
@@ -180,6 +188,6 @@ public class Motorph {
             System.out.println("Employee ID not found. Please try again.");
         }
 
-        displayMainMenu(); // Return to the main menu after showing results
+        displayMainMenu();
     }
 }
