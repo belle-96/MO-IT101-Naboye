@@ -8,18 +8,37 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class extends the EmployeeModel and is responsible for
+ * loading employee data from a text file.
+ * The file should contain employee records separated by '|'.
+ */
 public class EmployeeModelFromFile extends EmployeeModel {
 
+    /**
+     * Constructor that loads employee data from a default file path.
+     */
     public EmployeeModelFromFile() {
         File file = new File("./src/FilesToBeRead/EmployeeData.txt");
         getDataFromFile(file);
     }
 
+    /**
+     * Returns the list of employees read from the file.
+     *
+     * @return an array of Employee objects.
+     */
     @Override
     public Employee[] getEmployeeModelList() {
         return employees;
     }
 
+    /**
+     * Reads data from the specified text file and stores valid employee entries
+     * into the employees array.
+     *
+     * @param textFile The text file containing employee data.
+     */
     private void getDataFromFile(File textFile) {
         List<Employee> employeeList = new ArrayList<>();
 
@@ -48,12 +67,19 @@ public class EmployeeModelFromFile extends EmployeeModel {
         }
     }
 
+    /**
+     * Parses a line of data using a Scanner with '|' as a delimiter and maps
+     * it to an Employee object.
+     *
+     * @param scanner A Scanner object used to parse a single employee record.
+     * @return An Employee object if parsing is successful, otherwise null.
+     */
     private Employee parseDataFromScanner(Scanner scanner) {
         scanner.useDelimiter("[|]");
 
         try {
             Employee employee = new Employee();
-            employee.setEmpNo(scanner.next().trim()); // Trim to avoid spacing issues
+            employee.setEmpNo(scanner.next().trim());
             employee.setLastName(scanner.next().trim());
             employee.setFirstName(scanner.next().trim());
             employee.setBirthday(scanner.next().trim());
@@ -83,12 +109,18 @@ public class EmployeeModelFromFile extends EmployeeModel {
         }
     }
 
+    /**
+     * Finds an employee by their ID.
+     *
+     * @param empId The employee ID to search for.
+     * @return The Employee object if found, otherwise null.
+     */
     public Employee findEmployeeById(String empId) {
         for (Employee employee : employees) {
-            if (employee.getEmpNo().trim().equals(empId.trim())) { // Ensures no space issues
+            if (employee.getEmpNo().trim().equals(empId.trim())) {
                 return employee;
             }
         }
-        return null; // Employee not found
+        return null;
     }
 }

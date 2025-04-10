@@ -1,20 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.payrollsystem.motorph;
 
 import com.payrollsystem.motorph.EmployeeModel;
 import com.payrollsystem.motorph.Employee;
 
 /**
- *
- * @author Naboye A class that manually holds employee data and returns the list
- * of employee thru getEmployeeModelList
+ * A class that manually holds a predefined list of employee data.
+ * This class is an example of a static employee model that doesn't require reading from a file.
+ * It returns the list of employee records via the {@link #getEmployeeModelList()} method.
  */
 public class EmployeeModelFromClass extends EmployeeModel {
 
+    /**
+     * Constructor that initializes the employee data manually.
+     * Three employee records are created with predefined values.
+     */
     public EmployeeModelFromClass() {
+        // Creating the first employee instance and setting the attributes
         Employee employee1 = new Employee();
         employee1.setEmpNo("10002");
         employee1.setLastName("Matador");
@@ -36,6 +37,7 @@ public class EmployeeModelFromClass extends EmployeeModel {
         employee1.setSemiMonthlyRate(21488);
         employee1.setHourlyRate(255.80);
 
+        // Creating the second employee instance and setting the attributes
         Employee employee2 = new Employee();
         employee2.setEmpNo("10012");
         employee2.setLastName("Gomez");
@@ -57,6 +59,7 @@ public class EmployeeModelFromClass extends EmployeeModel {
         employee2.setSemiMonthlyRate(20925);
         employee2.setHourlyRate(249.11);
 
+        // Creating the third employee instance and setting the attributes
         Employee employee3 = new Employee();
         employee3.setEmpNo("10009");
         employee3.setLastName("San Jose");
@@ -78,10 +81,15 @@ public class EmployeeModelFromClass extends EmployeeModel {
         employee3.setSemiMonthlyRate(11250);
         employee3.setHourlyRate(133.93);
 
-        //populating the Employee array
+        // Populating the employees array with the created employee objects
         employees = new Employee[]{employee1, employee2, employee3};
     }
 
+    /**
+     * Returns the list of employees stored in this class.
+     *
+     * @return an array of Employee objects.
+     */
     @Override
     public Employee[] getEmployeeModelList() {
         return employees;

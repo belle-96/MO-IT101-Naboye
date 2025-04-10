@@ -2,16 +2,27 @@ package com.payrollsystem.motorph;
 
 import java.util.Scanner;
 
+/**
+ * Main class for the MotorPH Payroll System.
+ * Handles user interface, menu navigation, and interaction with employee models and salary calculations.
+ */
 public class Motorph {
 
-    private static int platform = 1;
+    private static int platform = 1; // 1 = Text File, 2 = Class File
     private static EmployeeModel employeeModel;
+    private static final Scanner input = new Scanner(System.in); // Single shared Scanner instance
 
+    /**
+     * Program entry point. Initializes the employee model and displays the main menu.
+     */
     public static void main(String[] args) {
         getDefaultEmployeeModel();
         displayMainMenu();
     }
 
+    /**
+     * Displays the main menu options and prompts the user to select an action.
+     */
     private static void displayMainMenu() {
         System.out.println("***********************************************");
         System.out.println("        Motor PH Main Menu      ");
@@ -24,12 +35,16 @@ public class Motorph {
         System.out.println("6: Exit");
         System.out.println("************************************************");
 
-        Scanner input = new Scanner(System.in);
         System.out.print("Please choose the screen you would like to view: ");
         String option = input.nextLine();
         processOption(option);
     }
 
+    /**
+     * Processes the user's main menu selection.
+     *
+     * @param option the menu option selected by the user
+     */
     private static void processOption(String option) {
         switch (option) {
             case "1":
@@ -57,6 +72,10 @@ public class Motorph {
         }
     }
 
+    /**
+     * Prompts the user to choose the data source platform (Text File or Class File).
+     * Updates the employee model based on the selected platform.
+     */
     private static void choosePlatform() {
         System.out.println("**********************************************************");
         System.out.println("    You have chosen option #1");
@@ -65,8 +84,7 @@ public class Motorph {
         System.out.println("    Option 2: Class File");
         System.out.println("**********************************************************");
 
-        Scanner inputPlatform = new Scanner(System.in);
-        String optionPlatform = inputPlatform.nextLine();
+        String optionPlatform = input.nextLine();
 
         if ("1".equals(optionPlatform)) {
             platform = 1;
@@ -77,18 +95,23 @@ public class Motorph {
             platform = 1;
         }
 
+        getDefaultEmployeeModel(); // Re-initialize based on platform selection
+
         System.out.println("**********************************************************");
         System.out.println("    Would you like to go back to the main menu?");
         System.out.println("    Option 1: Yes");
         System.out.println("    Option 2: No");
         System.out.println("**********************************************************");
 
-        String optionToMainMenu = inputPlatform.nextLine();
+        String optionToMainMenu = input.nextLine();
         if ("1".equals(optionToMainMenu)) {
             displayMainMenu();
         }
     }
 
+    /**
+     * Initializes the employee model depending on the current platform.
+     */
     private static void getDefaultEmployeeModel() {
         if (platform == 1) {
             employeeModel = new EmployeeModelFromFile();
@@ -97,6 +120,9 @@ public class Motorph {
         }
     }
 
+    /**
+     * Displays the list of employees retrieved from the employee model.
+     */
     private static void processListOfEmployees() {
         Employee[] employeeList = employeeModel.getEmployeeModelList();
         System.out.println("***********************************************");
@@ -111,6 +137,9 @@ public class Motorph {
         }
     }
 
+    /**
+     * Calculates and displays the net salary of all employees using fixed salary calculations.
+     */
     private static void calculateNetSalary() {
         Employee[] employeeList = employeeModel.getEmployeeModelList();
         SalaryCalculator salaryCalculator = new SalaryFixedCalculator();
@@ -133,6 +162,9 @@ public class Motorph {
         }
     }
 
+    /**
+     * Calculates and displays salary for all employees based on input hours worked.
+     */
     private static void salaryOnHoursWorked() {
         Employee[] employeeList = employeeModel.getEmployeeModelList();
         SalaryCalculator salaryCalculator = new SalaryOnHoursWorked();
@@ -142,9 +174,13 @@ public class Motorph {
         System.out.println("     Salaries based on hours worked");
         System.out.println("***********************************************");
 
-        Scanner input = new Scanner(System.in);
         System.out.print("Enter hours worked (e.g., 160): ");
+        while (!input.hasNextDouble()) {
+            System.out.println("Invalid input. Please enter a number.");
+            input.next(); // Clear the invalid input
+        }
         double hoursWorked = input.nextDouble();
+        input.nextLine(); // Clear newline
 
         for (Employee employee : employeeList) {
             double salary = salaryCalculator.calculateSalary(employee, hoursWorked);
@@ -154,8 +190,11 @@ public class Motorph {
         }
     }
 
+    /**
+     * Displays salary details of a specific employee based on their ID.
+     * If the ID is not found, an appropriate message is displayed.
+     */
     private static void viewEmployeeSalaryById() {
-        Scanner input = new Scanner(System.in);
         System.out.print("Enter Employee ID: ");
         String empId = input.nextLine();
 
